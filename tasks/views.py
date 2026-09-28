@@ -6,21 +6,23 @@ from django.views.generic import (
     CreateView,
     DeleteView,
     DetailView,
-    ListView,
     UpdateView,
 )
+from django_filters.views import FilterView
 
+from .filters import TaskFilter
 from .forms import TaskForm
 from .models import Task
 
 
-class TasksListView(LoginRequiredMixin, ListView):
+class TasksListView(LoginRequiredMixin, FilterView):
     model = Task
     template_name = 'tasks/tasks_list.html'
     context_object_name = 'tasks'
     ordering = ['id']
     login_url = reverse_lazy('login')
     redirect_field_name = None
+    filterset_class = TaskFilter
 
     def get_queryset(self):
         return (
