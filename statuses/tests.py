@@ -125,28 +125,18 @@ class StatusCrudTestCase(TransactionTestCase):
         self.assertContains(response, 'Статус успешно удален')
 
     def test_delete_protected_by_task(self):
-        with connection.schema_editor() as schema_editor:
-            try:
-                schema_editor.execute(
-                    '''
-                    CREATE TABLE IF NOT EXISTS tasks_task (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        name VARCHAR(255) NOT NULL,
-                        status_id INTEGER NOT NULL REFERENCES statuses_status(id)
-                            ON DELETE RESTRICT
-                            DEFERRABLE INITIALLY DEFERRED
-                    )
-                    '''
-                )
-            except Exception:
-                pass
-            try:
-                schema_editor.execute(
-                    'INSERT INTO tasks_task (name, status_id) VALUES (%s, %s)',
-                    ['Связанная задача', self.status_new.pk],
-                )
-            except Exception:
-                pass
+        from django.contrib.auth.models import User as U
+        from tasks.models import Task
+        from labels.models import Label
+
+        tmp_user = U.objects.create_user(
+            username='tmpuser_task_protection', password='Pass12345!'
+        )
+        task = Task.objects.create(
+            name='tmp_protection_task',
+            status=self.status_new,
+            author=tmp_user,
+        )
         try:
             self._auth()
             url = reverse('status_delete', kwargs={'pk': self.status_new.pk})
@@ -155,11 +145,8 @@ class StatusCrudTestCase(TransactionTestCase):
             self.assertTrue(Status.objects.filter(pk=self.status_new.pk).exists())
             self.assertContains(response, 'Невозможно удалить статус')
         finally:
-            with connection.schema_editor() as schema_editor:
-                try:
-                    schema_editor.execute('DROP TABLE IF EXISTS tasks_task')
-                except Exception:
-                    pass
+            task.delete()
+            tmp_user.delete()
 
     def test_form_fields_name_and_id(self):
         self._auth()

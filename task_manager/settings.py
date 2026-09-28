@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'django_filters',
     'users',
     'statuses',
+    'labels',
+    'tasks',
 ]
 
 LOGIN_REDIRECT_URL = 'home'

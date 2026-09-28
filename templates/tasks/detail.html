@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}{{ task.name }}{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-6">Просмотр задачи: {{ task.name }}</h1>
+
+<div class="max-w-3xl bg-white p-6 rounded-md shadow-sm border border-gray-200">
+    <dl class="grid grid-cols-1 gap-y-4 gap-x-6 sm:grid-cols-2">
+        <div>
+            <dt class="text-sm font-medium text-gray-500">Имя</dt>
+            <dd class="mt-1 text-sm text-gray-900">{{ task.name }}</dd>
+        </div>
+        <div>
+            <dt class="text-sm font-medium text-gray-500">Статус</dt>
+            <dd class="mt-1 text-sm text-gray-900">{{ task.status.name }}</dd>
+        </div>
+        <div>
+            <dt class="text-sm font-medium text-gray-500">Автор</dt>
+            <dd class="mt-1 text-sm text-gray-900">{{ task.author.username }}</dd>
+        </div>
+        <div>
+            <dt class="text-sm font-medium text-gray-500">Исполнитель</dt>
+            <dd class="mt-1 text-sm text-gray-900">{% if task.executor %}{{ task.executor.username }}{% else %}{% endif %}</dd>
+        </div>
+        <div class="sm:col-span-2">
+            <dt class="text-sm font-medium text-gray-500">Описание</dt>
+            <dd class="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{{ task.description|default:'' }}</dd>
+        </div>
+        <div>
+            <dt class="text-sm font-medium text-gray-500">Дата создания</dt>
+            <dd class="mt-1 text-sm text-gray-900">{{ task.created_at|date:"d.m.Y H:i" }}</dd>
+        </div>
+        <div>
+            <dt class="text-sm font-medium text-gray-500">Метки</dt>
+            <dd class="mt-1 text-sm text-gray-900">
+                {% for label in task.labels.all %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-800 mr-1">{{ label.name }}</span>
+                {% endfor %}
+            </dd>
+        </div>
+    </dl>
+
+    <div class="mt-6 flex gap-4">
+        <a href="{% url 'task_update' task.pk %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
+            Изменить
+        </a>
+        <a href="{% url 'task_delete' task.pk %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700">
+            Удалить
+        </a>
+        <a href="{% url 'tasks_list' %}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+            Назад к списку
+        </a>
+    </div>
+</div>
+{% endblock %}

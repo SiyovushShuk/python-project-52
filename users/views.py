@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, LogoutView
+from django.db import IntegrityError
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
@@ -81,9 +82,14 @@ class UserDeleteView(LoginRequiredMixin, DeleteView):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
-        messages.success(request, 'Пользователь успешно удален')
-        return response
+        self.object = self.get_object()
+        try:
+            response = super().post(request, *args, **kwargs)
+            messages.success(request, 'Пользователь успешно удален')
+            return response
+        except IntegrityError:
+            messages.error(request, 'Невозможно удалить пользователя')
+            return redirect('users_list')
 
 
 class UserLoginView(LoginView):
