@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from django.db import connection
 from django.test import TransactionTestCase
 from django.urls import reverse
 
@@ -126,8 +125,8 @@ class StatusCrudTestCase(TransactionTestCase):
 
     def test_delete_protected_by_task(self):
         from django.contrib.auth.models import User as U
+
         from tasks.models import Task
-        from labels.models import Label
 
         tmp_user = U.objects.create_user(
             username='tmpuser_task_protection', password='Pass12345!'

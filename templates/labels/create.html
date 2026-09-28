@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
-{% block title %}Изменение пользователя{% endblock %}
+{% block title %}Создание метки{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">Изменение пользователя</h1>
+<h1 class="mb-4">Создание метки</h1>
 
 <form method="post">
     {% csrf_token %}
@@ -30,6 +30,6 @@
     </div>
     {% endfor %}
 
-    <button type="submit" class="btn btn-primary">Изменить</button>
+    <button type="submit" class="btn btn-primary">Создать</button>
 </form>
 {% endblock %}

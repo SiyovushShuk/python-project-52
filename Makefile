@@ -1,4 +1,4 @@
-.PHONY: install migrate tailwind-build collectstatic setup build render-start dev-server lint
+.PHONY: install migrate collectstatic setup build render-start dev-server lint
 
 install:
 	uv sync
@@ -6,10 +6,7 @@ install:
 migrate:
 	uv run python manage.py migrate
 
-tailwind-build:
-	uv run python manage.py tailwind build
-
-collectstatic: tailwind-build
+collectstatic:
 	uv run python manage.py collectstatic --noinput
 
 setup: install migrate collectstatic
@@ -21,7 +18,7 @@ render-start:
 	uv run gunicorn task_manager.wsgi
 
 dev-server:
-	uv run python manage.py tailwind runserver 0.0.0.0:8000
+	uv run python manage.py runserver 0.0.0.0:8000
 
 lint:
 	uv run ruff check .
