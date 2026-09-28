@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django_tailwind_cli',
     'django_filters',
     'users',
+    'statuses',
 ]
 
 LOGIN_REDIRECT_URL = 'home'
