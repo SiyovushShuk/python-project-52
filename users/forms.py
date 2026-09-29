@@ -23,8 +23,8 @@ def _apply_bootstrap_classes(form):
 
 
 class UserRegisterForm(UserCreationForm):
-    first_name = CharField(label='Имя')
-    last_name = CharField(label='Фамилия')
+    first_name = CharField(label='Имя', required=False)
+    last_name = CharField(label='Фамилия', required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -45,8 +45,8 @@ class UserRegisterForm(UserCreationForm):
 
 
 class UserUpdateForm(UserCreationForm):
-    first_name = CharField(label='Имя')
-    last_name = CharField(label='Фамилия')
+    first_name = CharField(label='Имя', required=False)
+    last_name = CharField(label='Фамилия', required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
