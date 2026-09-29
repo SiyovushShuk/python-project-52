@@ -90,14 +90,14 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
             return self.handle_no_permission()
         task = self.get_object()
         if task.author_id != request.user.pk:
-            messages.error(request, 'Задачу может удалить только ее автор')
+            messages.error(request, 'Задачу может удалить только её автор')
             return redirect('tasks_list')
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         if self.object.author_id != request.user.pk:
-            messages.error(request, 'Задачу может удалить только ее автор')
+            messages.error(request, 'Задачу может удалить только её автор')
             return redirect('tasks_list')
         messages.success(request, 'Задача успешно удалена')
         return super().post(request, *args, **kwargs)
