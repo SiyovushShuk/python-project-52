@@ -30,7 +30,7 @@ class UserRegisterForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         self.fields['username'].label = 'Имя пользователя'
         self.fields['password1'].label = 'Пароль'
-        self.fields['password2'].label = 'Подтверждение пароля'
+        self.fields['password2'].label = 'Подтверждение'
         _apply_bootstrap_classes(self)
 
     class Meta:
@@ -52,7 +52,7 @@ class UserUpdateForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         self.fields['username'].label = 'Имя пользователя'
         self.fields['password1'].label = 'Пароль'
-        self.fields['password2'].label = 'Подтверждение пароля'
+        self.fields['password2'].label = 'Подтверждение'
         self.fields['password1'].required = False
         self.fields['password2'].required = False
         _apply_bootstrap_classes(self)
