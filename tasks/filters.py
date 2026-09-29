@@ -27,12 +27,12 @@ class TaskFilter(FilterSet):
     labels = ModelMultipleChoiceFilter(
         field_name='labels',
         queryset=Label.objects.all(),
-        label='Метка',
+        label='Метки',
     )
     self_tasks = BooleanFilter(
         field_name='author',
         method='filter_self_tasks',
-        label='Только свои задачи',
+        label='Только мои задачи',
         widget=forms.CheckboxInput,
     )
 

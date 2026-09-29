@@ -33,7 +33,7 @@ class UserViewsTestCase(TestCase):
         self.assertContains(response, 'Фамилия')
         self.assertContains(response, 'Имя пользователя')
         self.assertContains(response, 'Пароль')
-        self.assertContains(response, 'Подтверждение')
+        self.assertContains(response, 'Подтверждение пароля')
         self.assertContains(response, 'Зарегистрировать')
 
     def test_register_success(self):
