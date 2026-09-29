@@ -30,3 +30,4 @@ test-coverage:
 	uv run coverage run manage.py test users.tests statuses.tests labels.tests tasks.tests
 	uv run coverage report
 	uv run coverage xml
+	uv run python make_coverage_badge.py

@@ -18,13 +18,7 @@ class UserViewsTestCase(TestCase):
             last_name='Петров',
         )
 
-    def test_users_list_requires_login(self):
-        url = reverse('users_list')
-        response = self.client.get(url)
-        self.assertRedirects(response, reverse('login'))
-
-    def test_users_list_shows_users_for_authenticated(self):
-        self.client.login(username='user1', password='StrongPass123!')
+    def test_users_list_accessible_without_auth(self):
         url = reverse('users_list')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
@@ -155,13 +149,11 @@ class UserViewsTestCase(TestCase):
         self.client.login(username='user1', password='StrongPass123!')
         url = reverse('user_delete', kwargs={'pk': self.user1.pk})
         response = self.client.post(url, follow=True)
-        self.assertFalse(User.objects.filter(pk=self.user1.pk).exists())
+        self.assertRedirects(response, reverse('users_list'))
         self.assertContains(response, 'Пользователь успешно удален')
-        last_url = response.redirect_chain[-1][0] if response.redirect_chain else ''
-        self.assertIn(reverse('login'), last_url)
+        self.assertFalse(User.objects.filter(pk=self.user1.pk).exists())
 
     def test_users_list_has_action_links(self):
-        self.client.login(username='user1', password='StrongPass123!')
         url = reverse('users_list')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)

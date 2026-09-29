@@ -15,13 +15,11 @@ from django.views.generic import (
 from .forms import UserLoginForm, UserRegisterForm, UserUpdateForm
 
 
-class UsersListView(LoginRequiredMixin, ListView):
+class UsersListView(ListView):
     model = User
     template_name = 'users/users_list.html'
     context_object_name = 'users'
     ordering = ['id']
-    login_url = reverse_lazy('login')
-    redirect_field_name = None
 
 
 class UserRegisterView(CreateView):

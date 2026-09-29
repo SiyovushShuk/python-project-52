@@ -1,6 +1,7 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/SiyovushShuk/python-project-52/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/SiyovushShuk/python-project-52/actions)
 [![CI: Lint + Tests + Coverage](https://github.com/SiyovushShuk/python-project-52/actions/workflows/ci.yml/badge.svg)](https://github.com/SiyovushShuk/python-project-52/actions)
+[![Coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/SiyovushShuk/python-project-52/main/coverage-badge.json)](https://github.com/SiyovushShuk/python-project-52/actions)
 
 # Task Manager
 
