@@ -62,7 +62,7 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, 'Пользователь успешно изменен')
+        messages.success(self.request, 'Пользователь успешно изменён')
         return response
 
 
@@ -85,7 +85,7 @@ class UserDeleteView(LoginRequiredMixin, DeleteView):
         self.object = self.get_object()
         try:
             response = super().post(request, *args, **kwargs)
-            messages.success(request, 'Пользователь успешно удален')
+            messages.success(request, 'Пользователь успешно удалён')
             return response
         except IntegrityError:
             messages.error(request, 'Невозможно удалить пользователя')

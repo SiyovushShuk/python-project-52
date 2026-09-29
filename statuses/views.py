@@ -42,7 +42,7 @@ class StatusUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, 'Статус успешно изменен')
+        messages.success(self.request, 'Статус успешно изменён')
         return response
 
 
@@ -57,7 +57,7 @@ class StatusDeleteView(LoginRequiredMixin, DeleteView):
         self.object = self.get_object()
         try:
             response = super().post(request, *args, **kwargs)
-            messages.success(request, 'Статус успешно удален')
+            messages.success(request, 'Статус успешно удалён')
             return response
         except IntegrityError:
             messages.error(request, 'Невозможно удалить статус')
