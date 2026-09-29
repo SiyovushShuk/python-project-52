@@ -6,6 +6,22 @@ from django.contrib.auth.models import User
 from django.forms import CharField
 
 
+def _apply_bootstrap_classes(form):
+    for field in form.fields.values():
+        widget = field.widget
+        wtype = widget.__class__.__name__
+        if wtype in ('Select', 'SelectMultiple'):
+            css = 'form-select'
+        elif wtype in ('CheckboxInput',):
+            css = 'form-check-input'
+        else:
+            css = 'form-control'
+        existing = widget.attrs.get('class', '')
+        if existing:
+            css = f'{existing} {css}'.strip()
+        widget.attrs['class'] = css
+
+
 class UserRegisterForm(UserCreationForm):
     first_name = CharField(label='Имя')
     last_name = CharField(label='Фамилия')
@@ -15,6 +31,7 @@ class UserRegisterForm(UserCreationForm):
         self.fields['username'].label = 'Имя пользователя'
         self.fields['password1'].label = 'Пароль'
         self.fields['password2'].label = 'Подтверждение пароля'
+        _apply_bootstrap_classes(self)
 
     class Meta:
         model = User
@@ -38,6 +55,7 @@ class UserUpdateForm(UserCreationForm):
         self.fields['password2'].label = 'Подтверждение пароля'
         self.fields['password1'].required = False
         self.fields['password2'].required = False
+        _apply_bootstrap_classes(self)
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
@@ -84,3 +102,4 @@ class UserLoginForm(AuthenticationForm):
         super().__init__(*args, **kwargs)
         self.fields['username'].label = 'Имя пользователя'
         self.fields['password'].label = 'Пароль'
+        _apply_bootstrap_classes(self)

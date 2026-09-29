@@ -28,7 +28,6 @@ class TaskFilter(FilterSet):
         field_name='labels',
         queryset=Label.objects.all(),
         label='Метка',
-        widget=forms.SelectMultiple,
     )
     self_tasks = BooleanFilter(
         field_name='author',
@@ -40,6 +39,16 @@ class TaskFilter(FilterSet):
     class Meta:
         model = Task
         fields = ['status', 'executor', 'labels', 'self_tasks']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for fname, f in self.filters.items():
+            if fname == 'self_tasks':
+                f.field.widget.attrs['class'] = 'form-check-input'
+            else:
+                wname = f.field.widget.__class__.__name__
+                css = 'form-select' if wname in ('Select', 'SelectMultiple') else 'form-control'
+                f.field.widget.attrs['class'] = css
 
     def filter_self_tasks(self, queryset, name, value):
         if value:

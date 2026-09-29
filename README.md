@@ -9,9 +9,7 @@ Task Manager — система управления задачами, подо�
 
 Приложение задеплоено и доступно по адресу:
 
-🔗 **[Задеплоенное приложение на Render.com](https://your-app-name.onrender.com)**
-
-> *Замените `your-app-name.onrender.com` на реальный домен вашего приложения после деплоя на render.com.*
+🔗 **[task-manager-ckak.onrender.com](https://task-manager-ckak.onrender.com)**
 
 ## Технологии
 

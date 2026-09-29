@@ -1,6 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 
+from users.forms import _apply_bootstrap_classes
+
 from .models import Task
 
 
@@ -21,6 +23,10 @@ class TaskForm(ModelForm):
             'executor': 'Исполнитель',
             'labels': 'Метки',
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        _apply_bootstrap_classes(self)
 
     def clean_name(self):
         name = self.cleaned_data.get('name')

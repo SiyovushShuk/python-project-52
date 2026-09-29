@@ -1,6 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 
+from users.forms import _apply_bootstrap_classes
+
 from .models import Status
 
 
@@ -11,6 +13,10 @@ class StatusForm(ModelForm):
         labels = {
             'name': 'Имя',
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        _apply_bootstrap_classes(self)
 
     def clean_name(self):
         name = self.cleaned_data.get('name')
