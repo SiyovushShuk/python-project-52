@@ -1,18 +1,18 @@
-.PHONY: install migrate collectstatic setup build render-start dev-server lint
+.PHONY: build setup install migrate collectstatic render-start dev-server lint test test-coverage
+
+build: setup
+	@true
+
+setup: install migrate collectstatic
 
 install:
 	uv sync
 
-migrate:
+migrate: install
 	uv run python manage.py migrate
 
-collectstatic:
+collectstatic: install
 	uv run python manage.py collectstatic --noinput
-
-setup: install migrate collectstatic
-
-build:
-	./build.sh
 
 render-start:
 	uv run gunicorn task_manager.wsgi
@@ -22,3 +22,11 @@ dev-server:
 
 lint:
 	uv run ruff check .
+
+test:
+	uv run python manage.py test users.tests statuses.tests labels.tests tasks.tests
+
+test-coverage:
+	uv run coverage run manage.py test users.tests statuses.tests labels.tests tasks.tests
+	uv run coverage report
+	uv run coverage xml

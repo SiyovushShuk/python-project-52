@@ -1,5 +1,6 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/SiyovushShuk/python-project-52/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/SiyovushShuk/python-project-52/actions)
+[![CI: Lint + Tests + Coverage](https://github.com/SiyovushShuk/python-project-52/actions/workflows/ci.yml/badge.svg)](https://github.com/SiyovushShuk/python-project-52/actions)
 
 # Task Manager
 
@@ -17,7 +18,7 @@ Task Manager — система управления задачами, подо�
 - **Django** — ORM, шаблонизатор DjangoTemplates, формы, аутентификация и авторизация
 - **PostgreSQL** в продакшене (psycopg2-binary, dj-database-url), **SQLite** — для локальной разработки
 - **django-filter** — фильтрация списка задач
-- **Tailwind CSS** через пакет **django-tailwind-cli**, раздача статики — через **whitenoise**
+- **Bootstrap 5** через CDN — UI, серверный рендер шаблонов DjangoTemplates
 - **render.com** — PaaS для деплоя, приложение запускается через **gunicorn**
 - **python-dotenv** — настройки и секреты через переменные окружения
 - **Ruff** — линтер
@@ -59,13 +60,14 @@ Task Manager — система управления задачами, подо�
 
 - `make install` — установить зависимости с помощью uv
 - `make migrate` — применить миграции базы данных
-- `make tailwind-build` — собрать Tailwind CSS
 - `make collectstatic` — собрать статические файлы
 - `make setup` — полная настройка окружения (install + migrate + collectstatic)
 - `make build` — запустить скрипт сборки для деплоя (build.sh)
 - `make render-start` — запустить приложение через gunicorn (для render.com)
-- `make dev-server` — запустить сервер разработки Django с Tailwind watch
+- `make dev-server` — запустить сервер разработки Django
 - `make lint` — запустить линтер Ruff
+- `make test` — запустить тесты Django
+- `make test-coverage` — запустить тесты с отчетом о покрытии (порог 70%)
 
 ## Деплой на Render.com
 
