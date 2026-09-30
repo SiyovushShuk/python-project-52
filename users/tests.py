@@ -84,7 +84,7 @@ class UserViewsTestCase(TestCase):
         }
         response = self.client.post(url, data, follow=True)
         self.assertRedirects(response, reverse('home'))
-        self.assertContains(response, 'Вы вошли')
+        self.assertContains(response, 'Вы вошли в систему')
         self.assertEqual(int(self.client.session['_auth_user_id']), self.user1.pk)
 
     def test_logout_success(self):
@@ -92,7 +92,7 @@ class UserViewsTestCase(TestCase):
         url = reverse('logout')
         response = self.client.post(url, follow=True)
         self.assertRedirects(response, reverse('home'))
-        self.assertContains(response, 'Вы вышли')
+        self.assertContains(response, 'Вы вышли из системы')
         self.assertNotIn('_auth_user_id', self.client.session)
 
     def test_update_self_page(self):
