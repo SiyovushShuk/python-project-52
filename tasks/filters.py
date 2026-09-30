@@ -1,5 +1,11 @@
+from __future__ import annotations
+
+from typing import Any
+
 from django import forms
 from django.contrib.auth import get_user_model
+from django.db.models import QuerySet
+from django.http import HttpRequest
 from django_filters import (
     BooleanFilter,
     FilterSet,
@@ -40,8 +46,8 @@ class TaskFilter(FilterSet):
         model = Task
         fields = ['status', 'executor', 'labels', 'self_tasks']
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, data: Any | None = None, queryset: QuerySet[Any] | None = None, *, request: HttpRequest | None = None, **kwargs: Any) -> None:
+        super().__init__(data, queryset, request=request, **kwargs)
         if self.filters.get('executor'):
             self.filters['executor'].field.label_from_instance = (
                 lambda user: user.get_full_name() or user.username
@@ -54,7 +60,7 @@ class TaskFilter(FilterSet):
                 css = 'form-select' if wname in ('Select', 'SelectMultiple') else 'form-control'
                 f.field.widget.attrs['class'] = css
 
-    def filter_self_tasks(self, queryset, name, value):
+    def filter_self_tasks(self, queryset: QuerySet[Task], name: str, value: bool) -> QuerySet[Task]:
         if value:
             user = getattr(self.request, 'user', None)
             if user and user.is_authenticated:

@@ -1,4 +1,8 @@
-from django.urls import path
+from __future__ import annotations
+
+from typing import List
+
+from django.urls import URLPattern, path
 
 from .views import (
     LabelCreateView,
@@ -7,7 +11,7 @@ from .views import (
     LabelUpdateView,
 )
 
-urlpatterns = [
+urlpatterns: List[URLPattern] = [
     path('', LabelsListView.as_view(), name='labels_list'),
     path('create/', LabelCreateView.as_view(), name='label_create'),
     path('<int:pk>/update/', LabelUpdateView.as_view(), name='label_update'),

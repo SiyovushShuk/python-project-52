@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.contrib.auth.models import User
 from django.test import TransactionTestCase
 from django.urls import reverse
@@ -6,22 +8,22 @@ from .models import Status
 
 
 class StatusCrudTestCase(TransactionTestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.user = User.objects.create_user(
             username='tester', password='StrongPass123!'
         )
         self.status_new = Status.objects.create(name='новый')
         self.status_work = Status.objects.create(name='в работе')
 
-    def _auth(self):
+    def _auth(self) -> None:
         self.client.login(username='tester', password='StrongPass123!')
 
-    def test_list_requires_login(self):
+    def test_list_requires_login(self) -> None:
         url = reverse('statuses_list')
         response = self.client.get(url)
         self.assertRedirects(response, reverse('login'))
 
-    def test_list_accessible_for_authenticated(self):
+    def test_list_accessible_for_authenticated(self) -> None:
         self._auth()
         url = reverse('statuses_list')
         response = self.client.get(url)
@@ -33,18 +35,18 @@ class StatusCrudTestCase(TransactionTestCase):
         self.assertContains(response, 'Изменить')
         self.assertContains(response, 'Удалить')
 
-    def test_create_page_requires_login(self):
+    def test_create_page_requires_login(self) -> None:
         response = self.client.get(reverse('status_create'))
         self.assertRedirects(response, reverse('login'))
 
-    def test_create_page_rendered(self):
+    def test_create_page_rendered(self) -> None:
         self._auth()
         response = self.client.get(reverse('status_create'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Имя')
         self.assertContains(response, 'Создать')
 
-    def test_create_success(self):
+    def test_create_success(self) -> None:
         self._auth()
         url = reverse('status_create')
         response = self.client.post(url, {'name': 'на тестировании'}, follow=True)
@@ -52,7 +54,7 @@ class StatusCrudTestCase(TransactionTestCase):
         self.assertTrue(Status.objects.filter(name='на тестировании').exists())
         self.assertContains(response, 'Статус успешно создан')
 
-    def test_create_duplicate_name(self):
+    def test_create_duplicate_name(self) -> None:
         self._auth()
         url = reverse('status_create')
         response = self.client.post(url, {'name': 'новый'})
@@ -64,20 +66,20 @@ class StatusCrudTestCase(TransactionTestCase):
             msg='Ошибка уникальности не найдена. Ответ: ' + text,
         )
 
-    def test_update_page_requires_login(self):
+    def test_update_page_requires_login(self) -> None:
         response = self.client.get(
             reverse('status_update', kwargs={'pk': self.status_new.pk})
         )
         self.assertRedirects(response, reverse('login'))
 
-    def test_update_page_rendered(self):
+    def test_update_page_rendered(self) -> None:
         self._auth()
         url = reverse('status_update', kwargs={'pk': self.status_new.pk})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Изменить')
 
-    def test_update_success(self):
+    def test_update_success(self) -> None:
         self._auth()
         url = reverse('status_update', kwargs={'pk': self.status_new.pk})
         response = self.client.post(
@@ -88,7 +90,7 @@ class StatusCrudTestCase(TransactionTestCase):
         self.assertEqual(self.status_new.name, 'Новый обновленный')
         self.assertContains(response, 'Статус успешно изменен')
 
-    def test_update_duplicate_name(self):
+    def test_update_duplicate_name(self) -> None:
         self._auth()
         url = reverse('status_update', kwargs={'pk': self.status_new.pk})
         response = self.client.post(url, {'name': 'в работе'})
@@ -101,20 +103,20 @@ class StatusCrudTestCase(TransactionTestCase):
             msg='Ошибка уникальности не найдена. Ответ: ' + text,
         )
 
-    def test_delete_page_requires_login(self):
+    def test_delete_page_requires_login(self) -> None:
         response = self.client.get(
             reverse('status_delete', kwargs={'pk': self.status_new.pk})
         )
         self.assertRedirects(response, reverse('login'))
 
-    def test_delete_page_rendered(self):
+    def test_delete_page_rendered(self) -> None:
         self._auth()
         url = reverse('status_delete', kwargs={'pk': self.status_new.pk})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Да, удалить')
 
-    def test_delete_success(self):
+    def test_delete_success(self) -> None:
         self._auth()
         url = reverse('status_delete', kwargs={'pk': self.status_work.pk})
         pk = self.status_work.pk
@@ -123,7 +125,7 @@ class StatusCrudTestCase(TransactionTestCase):
         self.assertFalse(Status.objects.filter(pk=pk).exists())
         self.assertContains(response, 'Статус успешно удален')
 
-    def test_delete_protected_by_task(self):
+    def test_delete_protected_by_task(self) -> None:
         from django.contrib.auth.models import User as U
 
         from tasks.models import Task
@@ -147,7 +149,7 @@ class StatusCrudTestCase(TransactionTestCase):
             task.delete()
             tmp_user.delete()
 
-    def test_form_fields_name_and_id(self):
+    def test_form_fields_name_and_id(self) -> None:
         self._auth()
         response = self.client.get(reverse('status_create'))
         html = response.content.decode('utf-8')

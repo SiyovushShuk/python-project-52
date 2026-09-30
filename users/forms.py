@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import Any, Optional
+
 from django.contrib.auth.forms import (
     AuthenticationForm,
     UserCreationForm,
@@ -6,7 +10,7 @@ from django.contrib.auth.models import User
 from django.forms import CharField
 
 
-def _apply_bootstrap_classes(form):
+def _apply_bootstrap_classes(form: Any) -> None:
     for field in form.fields.values():
         widget = field.widget
         wtype = widget.__class__.__name__
@@ -26,7 +30,7 @@ class UserRegisterForm(UserCreationForm):
     first_name = CharField(label='Имя:', required=False)
     last_name = CharField(label='Фамилия:', required=False)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.fields['username'].label = 'Имя пользователя:'
         self.fields['password1'].label = 'Пароль:'
@@ -48,7 +52,7 @@ class UserUpdateForm(UserCreationForm):
     first_name = CharField(label='Имя:', required=False)
     last_name = CharField(label='Фамилия:', required=False)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.fields['username'].label = 'Имя пользователя:'
         self.fields['password1'].label = 'Пароль:'
@@ -57,7 +61,7 @@ class UserUpdateForm(UserCreationForm):
         self.fields['password2'].required = False
         _apply_bootstrap_classes(self)
 
-    def clean_username(self):
+    def clean_username(self) -> Optional[str]:
         username = self.cleaned_data.get('username')
         if self.instance and self.instance.pk:
             if User.objects.filter(username=username).exclude(pk=self.instance.pk).exists():
@@ -65,7 +69,7 @@ class UserUpdateForm(UserCreationForm):
                 raise ValidationError('Пользователь с таким именем уже существует')
         return username
 
-    def clean(self):
+    def clean(self) -> dict[str, Any]:
         cleaned_data = super().clean()
         password1 = cleaned_data.get('password1')
         password2 = cleaned_data.get('password2')
@@ -74,7 +78,7 @@ class UserUpdateForm(UserCreationForm):
                 self.add_error('password2', 'Пароли не совпадают')
         return cleaned_data
 
-    def save(self, commit=True):
+    def save(self, commit: bool = True) -> User:
         user = super().save(commit=False)
         password = self.cleaned_data.get('password1')
         if password:
@@ -98,7 +102,7 @@ class UserUpdateForm(UserCreationForm):
 
 
 class UserLoginForm(AuthenticationForm):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.fields['username'].label = 'Имя пользователя:'
         self.fields['password'].label = 'Пароль:'

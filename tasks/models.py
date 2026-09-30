@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.conf import settings
 from django.db import models
 
@@ -38,5 +40,5 @@ class Task(models.Model):
         verbose_name = 'Задача'
         verbose_name_plural = 'Задачи'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name

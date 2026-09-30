@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.db import models
 
 
@@ -10,5 +12,5 @@ class Label(models.Model):
         verbose_name = 'Метка'
         verbose_name_plural = 'Метки'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name

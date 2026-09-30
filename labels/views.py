@@ -1,6 +1,11 @@
+from __future__ import annotations
+
+from typing import Any
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
@@ -26,7 +31,7 @@ class LabelCreateView(LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
     redirect_field_name = None
 
-    def form_valid(self, form):
+    def form_valid(self, form: LabelForm) -> HttpResponse:
         response = super().form_valid(form)
         messages.success(self.request, 'Метка успешно создана')
         return response
@@ -40,7 +45,7 @@ class LabelUpdateView(LoginRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
     redirect_field_name = None
 
-    def form_valid(self, form):
+    def form_valid(self, form: LabelForm) -> HttpResponse:
         response = super().form_valid(form)
         messages.success(self.request, 'Метка успешно изменена')
         return response
@@ -53,7 +58,7 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
     redirect_field_name = None
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         self.object = self.get_object()
         if self.object.tasks.exists():
             messages.error(request, 'Невозможно удалить метку, потому что она используется')

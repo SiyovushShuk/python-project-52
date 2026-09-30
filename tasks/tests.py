@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import Optional
+
 from django.contrib.auth.models import User
 from django.test import TransactionTestCase
 from django.urls import reverse
@@ -9,7 +13,7 @@ from .models import Task
 
 
 class TaskCrudTestCase(TransactionTestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.user1 = User.objects.create_user(
             username='author1', password='StrongPass1!'
         )
@@ -29,16 +33,16 @@ class TaskCrudTestCase(TransactionTestCase):
         )
         self.task.labels.add(self.label_bug)
 
-    def _auth(self, user=None):
+    def _auth(self, user: Optional[User] = None) -> None:
         if user is None:
             user = self.user1
         self.client.login(username=user.username, password='StrongPass1!' if user == self.user1 else 'StrongPass2!')
 
-    def test_list_requires_login(self):
+    def test_list_requires_login(self) -> None:
         response = self.client.get(reverse('tasks_list'))
         self.assertRedirects(response, reverse('login'))
 
-    def test_list_authenticated(self):
+    def test_list_authenticated(self) -> None:
         self._auth()
         response = self.client.get(reverse('tasks_list'))
         self.assertEqual(response.status_code, 200)
@@ -50,11 +54,11 @@ class TaskCrudTestCase(TransactionTestCase):
         self.assertContains(response, 'Изменить')
         self.assertContains(response, 'Удалить')
 
-    def test_detail_requires_login(self):
+    def test_detail_requires_login(self) -> None:
         response = self.client.get(reverse('task_detail', kwargs={'pk': self.task.pk}))
         self.assertRedirects(response, reverse('login'))
 
-    def test_detail_authenticated(self):
+    def test_detail_authenticated(self) -> None:
         self._auth()
         response = self.client.get(reverse('task_detail', kwargs={'pk': self.task.pk}))
         self.assertEqual(response.status_code, 200)
@@ -65,18 +69,18 @@ class TaskCrudTestCase(TransactionTestCase):
         self.assertContains(response, self.user2.username)
         self.assertContains(response, self.label_bug.name)
 
-    def test_create_requires_login(self):
+    def test_create_requires_login(self) -> None:
         response = self.client.get(reverse('task_create'))
         self.assertRedirects(response, reverse('login'))
 
-    def test_create_form_labels(self):
+    def test_create_form_labels(self) -> None:
         self._auth()
         response = self.client.get(reverse('task_create'))
         self.assertEqual(response.status_code, 200)
         for label in ['Имя', 'Описание', 'Статус', 'Исполнитель', 'Метки', 'Создать']:
             self.assertContains(response, label)
 
-    def test_create_success(self):
+    def test_create_success(self) -> None:
         self._auth()
         url = reverse('task_create')
         data = {
@@ -95,7 +99,7 @@ class TaskCrudTestCase(TransactionTestCase):
         self.assertEqual(set(task.labels.values_list('pk', flat=True)), {self.label_bug.pk, self.label_feature.pk})
         self.assertContains(response, 'Задача успешно создана')
 
-    def test_create_duplicate_name(self):
+    def test_create_duplicate_name(self) -> None:
         self._auth()
         url = reverse('task_create')
         data = {
@@ -112,11 +116,11 @@ class TaskCrudTestCase(TransactionTestCase):
             msg='Ошибка уникальности имени задачи не найдена: ' + text,
         )
 
-    def test_update_requires_login(self):
+    def test_update_requires_login(self) -> None:
         response = self.client.get(reverse('task_update', kwargs={'pk': self.task.pk}))
         self.assertRedirects(response, reverse('login'))
 
-    def test_update_success(self):
+    def test_update_success(self) -> None:
         self._auth()
         url = reverse('task_update', kwargs={'pk': self.task.pk})
         data = {
@@ -135,11 +139,11 @@ class TaskCrudTestCase(TransactionTestCase):
         self.assertEqual(list(self.task.labels.values_list('pk', flat=True)), [self.label_feature.pk])
         self.assertContains(response, 'Задача успешно изменена')
 
-    def test_delete_requires_login(self):
+    def test_delete_requires_login(self) -> None:
         response = self.client.get(reverse('task_delete', kwargs={'pk': self.task.pk}))
         self.assertRedirects(response, reverse('login'))
 
-    def test_delete_by_author_success(self):
+    def test_delete_by_author_success(self) -> None:
         self._auth(self.user1)
         pk = self.task.pk
         response = self.client.post(reverse('task_delete', kwargs={'pk': pk}), follow=True)
@@ -147,7 +151,7 @@ class TaskCrudTestCase(TransactionTestCase):
         self.assertFalse(Task.objects.filter(pk=pk).exists())
         self.assertContains(response, 'Задача успешно удалена')
 
-    def test_delete_by_non_author_forbidden(self):
+    def test_delete_by_non_author_forbidden(self) -> None:
         self._auth(self.user2)
         pk = self.task.pk
         response = self.client.post(reverse('task_delete', kwargs={'pk': pk}), follow=True)
@@ -155,13 +159,13 @@ class TaskCrudTestCase(TransactionTestCase):
         self.assertTrue(Task.objects.filter(pk=pk).exists())
         self.assertContains(response, 'Задачу может удалить только ее автор')
 
-    def test_delete_page_has_confirm_button(self):
+    def test_delete_page_has_confirm_button(self) -> None:
         self._auth(self.user1)
         response = self.client.get(reverse('task_delete', kwargs={'pk': self.task.pk}))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Да, удалить')
 
-    def test_form_fields_exist(self):
+    def test_form_fields_exist(self) -> None:
         self._auth()
         response = self.client.get(reverse('task_create'))
         html = response.content.decode('utf-8')
@@ -178,7 +182,7 @@ class TaskCrudTestCase(TransactionTestCase):
 
 
 class TaskFilterTestCase(TransactionTestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.user1 = User.objects.create_user(
             username='alice', password='StrongPass1!'
         )
@@ -211,7 +215,7 @@ class TaskFilterTestCase(TransactionTestCase):
         )
         self.task3.labels.add(self.label_bug, self.label_feature)
 
-    def _auth(self, user=None):
+    def _auth(self, user: Optional[User] = None) -> None:
         u = user or self.user1
         passwd = {
             self.user1: 'StrongPass1!',
@@ -220,19 +224,19 @@ class TaskFilterTestCase(TransactionTestCase):
         }[u]
         self.client.login(username=u.username, password=passwd)
 
-    def test_filter_requires_login(self):
+    def test_filter_requires_login(self) -> None:
         url = reverse('tasks_list') + f'?status={self.status_new.pk}'
         response = self.client.get(url)
         self.assertRedirects(response, reverse('login'))
 
-    def test_filter_form_labels_present(self):
+    def test_filter_form_labels_present(self) -> None:
         self._auth()
         response = self.client.get(reverse('tasks_list'))
         self.assertEqual(response.status_code, 200)
         for text in ['Статус:', 'Исполнитель:', 'Метка:', 'Только свои задачи:', 'Показать', 'Сбросить']:
             self.assertContains(response, text)
 
-    def test_filter_by_status(self):
+    def test_filter_by_status(self) -> None:
         self._auth()
         url = reverse('tasks_list') + f'?status={self.status_work.pk}'
         response = self.client.get(url)
@@ -241,7 +245,7 @@ class TaskFilterTestCase(TransactionTestCase):
         self.assertNotContains(response, self.task1.name)
         self.assertNotContains(response, self.task3.name)
 
-    def test_filter_by_executor(self):
+    def test_filter_by_executor(self) -> None:
         self._auth()
         url = reverse('tasks_list') + f'?executor={self.user2.pk}'
         response = self.client.get(url)
@@ -250,7 +254,7 @@ class TaskFilterTestCase(TransactionTestCase):
         self.assertNotContains(response, self.task2.name)
         self.assertNotContains(response, self.task3.name)
 
-    def test_filter_by_label(self):
+    def test_filter_by_label(self) -> None:
         self._auth()
         url = reverse('tasks_list') + f'?labels={self.label_feature.pk}'
         response = self.client.get(url)
@@ -259,7 +263,7 @@ class TaskFilterTestCase(TransactionTestCase):
         self.assertContains(response, self.task3.name)
         self.assertNotContains(response, self.task1.name)
 
-    def test_filter_self_tasks(self):
+    def test_filter_self_tasks(self) -> None:
         self._auth(self.user1)
         url = reverse('tasks_list') + '?self_tasks=on'
         response = self.client.get(url)
@@ -268,7 +272,7 @@ class TaskFilterTestCase(TransactionTestCase):
         self.assertContains(response, self.task3.name)
         self.assertNotContains(response, self.task2.name)
 
-    def test_filter_self_tasks_user2(self):
+    def test_filter_self_tasks_user2(self) -> None:
         self._auth(self.user2)
         url = reverse('tasks_list') + '?self_tasks=on'
         response = self.client.get(url)
@@ -277,7 +281,7 @@ class TaskFilterTestCase(TransactionTestCase):
         self.assertNotContains(response, self.task1.name)
         self.assertNotContains(response, self.task3.name)
 
-    def test_filter_no_params_returns_all(self):
+    def test_filter_no_params_returns_all(self) -> None:
         self._auth()
         response = self.client.get(reverse('tasks_list'))
         self.assertEqual(response.status_code, 200)
@@ -286,7 +290,7 @@ class TaskFilterTestCase(TransactionTestCase):
 
 
 class UserStatusDeleteProtectionTestCase(TransactionTestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.user = User.objects.create_user(username='bob', password='StrongPass1!')
         self.status = Status.objects.create(name='новый')
         self.task = Task.objects.create(
@@ -295,7 +299,7 @@ class UserStatusDeleteProtectionTestCase(TransactionTestCase):
             author=self.user,
         )
 
-    def test_delete_user_with_task_protected(self):
+    def test_delete_user_with_task_protected(self) -> None:
         self.client.login(username='bob', password='StrongPass1!')
         response = self.client.post(
             reverse('user_delete', kwargs={'pk': self.user.pk}), follow=True
@@ -304,7 +308,7 @@ class UserStatusDeleteProtectionTestCase(TransactionTestCase):
         self.assertTrue(User.objects.filter(pk=self.user.pk).exists())
         self.assertContains(response, 'Невозможно удалить пользователя')
 
-    def test_delete_status_with_task_protected(self):
+    def test_delete_status_with_task_protected(self) -> None:
         self.client.login(username='bob', password='StrongPass1!')
         response = self.client.post(
             reverse('status_delete', kwargs={'pk': self.status.pk}), follow=True

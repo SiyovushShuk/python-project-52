@@ -1,5 +1,11 @@
+from __future__ import annotations
+
+from typing import Any
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import QuerySet
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -24,7 +30,7 @@ class TasksListView(LoginRequiredMixin, FilterView):
     redirect_field_name = None
     filterset_class = TaskFilter
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Task]:
         return (
             super()
             .get_queryset()
@@ -40,7 +46,7 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
     login_url = reverse_lazy('login')
     redirect_field_name = None
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Task]:
         return (
             super()
             .get_queryset()
@@ -57,7 +63,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
     redirect_field_name = None
 
-    def form_valid(self, form):
+    def form_valid(self, form: TaskForm) -> HttpResponseRedirect:
         form.instance.author = self.request.user
         response = super().form_valid(form)
         messages.success(self.request, 'Задача успешно создана')
@@ -72,7 +78,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
     redirect_field_name = None
 
-    def form_valid(self, form):
+    def form_valid(self, form: TaskForm) -> HttpResponseRedirect:
         response = super().form_valid(form)
         messages.success(self.request, 'Задача успешно изменена')
         return response
@@ -85,7 +91,7 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
     redirect_field_name = None
 
-    def dispatch(self, request, *args, **kwargs):
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         if not request.user.is_authenticated:
             return self.handle_no_permission()
         task = self.get_object()
@@ -94,7 +100,7 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
             return redirect('tasks_list')
         return super().dispatch(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponseRedirect:
         self.object = self.get_object()
         if self.object.author_id != request.user.pk:
             messages.error(request, 'Задачу может удалить только ее автор')

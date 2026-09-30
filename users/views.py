@@ -1,8 +1,13 @@
+from __future__ import annotations
+
+from typing import Any
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, LogoutView
 from django.db import IntegrityError
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
@@ -28,7 +33,7 @@ class UserRegisterView(CreateView):
     template_name = 'users/create.html'
     success_url = reverse_lazy('login')
 
-    def form_valid(self, form):
+    def form_valid(self, form: UserRegisterForm) -> HttpResponse:
         response = super().form_valid(form)
         messages.success(self.request, 'Пользователь успешно зарегистрирован')
         return response
@@ -42,7 +47,7 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
     redirect_field_name = None
 
-    def dispatch(self, request, *args, **kwargs):
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         if not request.user.is_authenticated:
             return self.handle_no_permission()
         if request.user.pk != kwargs.get('pk'):
@@ -50,7 +55,7 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
             return redirect('users_list')
         return super().dispatch(request, *args, **kwargs)
 
-    def get_form_kwargs(self):
+    def get_form_kwargs(self) -> dict[str, Any]:
         kwargs = super().get_form_kwargs()
         if self.object:
             kwargs['initial'] = {
@@ -60,7 +65,7 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
             }
         return kwargs
 
-    def form_valid(self, form):
+    def form_valid(self, form: UserUpdateForm) -> HttpResponse:
         response = super().form_valid(form)
         messages.success(self.request, 'Пользователь успешно изменен')
         return response
@@ -73,7 +78,7 @@ class UserDeleteView(LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
     redirect_field_name = None
 
-    def dispatch(self, request, *args, **kwargs):
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         if not request.user.is_authenticated:
             return self.handle_no_permission()
         if request.user.pk != kwargs.get('pk'):
@@ -81,7 +86,7 @@ class UserDeleteView(LoginRequiredMixin, DeleteView):
             return redirect('users_list')
         return super().dispatch(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         self.object = self.get_object()
         try:
             response = super().post(request, *args, **kwargs)
@@ -96,10 +101,10 @@ class UserLoginView(LoginView):
     template_name = 'users/login.html'
     form_class = UserLoginForm
 
-    def get_success_url(self):
+    def get_success_url(self) -> str:
         return reverse('home')
 
-    def form_valid(self, form):
+    def form_valid(self, form: UserLoginForm) -> HttpResponse:
         response = super().form_valid(form)
         messages.success(self.request, 'Вы залогинены')
         return response
@@ -109,7 +114,7 @@ class UserLogoutView(LogoutView):
     next_page = reverse_lazy('home')
     http_method_names = ['post', 'get']
 
-    def dispatch(self, request, *args, **kwargs):
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         response = super().dispatch(request, *args, **kwargs)
         messages.success(request, 'Вы разлогинены')
         return response

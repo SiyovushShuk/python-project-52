@@ -2,9 +2,10 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from typing import NoReturn
 
 
-def main():
+def main() -> NoReturn:
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'task_manager.settings')
     try:
