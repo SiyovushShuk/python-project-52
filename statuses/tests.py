@@ -86,7 +86,7 @@ class StatusCrudTestCase(TransactionTestCase):
         self.assertRedirects(response, reverse('statuses_list'))
         self.status_new.refresh_from_db()
         self.assertEqual(self.status_new.name, 'Новый обновленный')
-        self.assertContains(response, 'Статус успешно изменён')
+        self.assertContains(response, 'Статус успешно изменен')
 
     def test_update_duplicate_name(self):
         self._auth()
@@ -121,7 +121,7 @@ class StatusCrudTestCase(TransactionTestCase):
         response = self.client.post(url, follow=True)
         self.assertRedirects(response, reverse('statuses_list'))
         self.assertFalse(Status.objects.filter(pk=pk).exists())
-        self.assertContains(response, 'Статус успешно удалён')
+        self.assertContains(response, 'Статус успешно удален')
 
     def test_delete_protected_by_task(self):
         from django.contrib.auth.models import User as U

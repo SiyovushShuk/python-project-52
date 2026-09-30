@@ -153,7 +153,7 @@ class TaskCrudTestCase(TransactionTestCase):
         response = self.client.post(reverse('task_delete', kwargs={'pk': pk}), follow=True)
         self.assertRedirects(response, reverse('tasks_list'))
         self.assertTrue(Task.objects.filter(pk=pk).exists())
-        self.assertContains(response, 'Задачу может удалить только её автор')
+        self.assertContains(response, 'Задачу может удалить только ее автор')
 
     def test_delete_page_has_confirm_button(self):
         self._auth(self.user1)

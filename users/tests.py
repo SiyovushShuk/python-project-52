@@ -126,7 +126,7 @@ class UserViewsTestCase(TestCase):
         }
         response = self.client.post(url, data, follow=True)
         self.assertRedirects(response, reverse('users_list'))
-        self.assertContains(response, 'Пользователь успешно изменён')
+        self.assertContains(response, 'Пользователь успешно изменен')
         self.user1.refresh_from_db()
         self.assertEqual(self.user1.first_name, 'ИванUpdated')
         self.assertEqual(self.user1.last_name, 'ИвановUpdated')
@@ -150,7 +150,7 @@ class UserViewsTestCase(TestCase):
         url = reverse('user_delete', kwargs={'pk': self.user1.pk})
         response = self.client.post(url, follow=True)
         self.assertRedirects(response, reverse('users_list'))
-        self.assertContains(response, 'Пользователь успешно удалён')
+        self.assertContains(response, 'Пользователь успешно удален')
         self.assertFalse(User.objects.filter(pk=self.user1.pk).exists())
 
     def test_users_list_has_action_links(self):

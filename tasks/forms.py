@@ -26,6 +26,9 @@ class TaskForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['executor'].label_from_instance = (
+            lambda user: user.get_full_name() or user.username
+        )
         _apply_bootstrap_classes(self)
 
     def clean_name(self):
