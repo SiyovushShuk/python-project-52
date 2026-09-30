@@ -101,7 +101,7 @@ class UserLoginView(LoginView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, 'Вы вошли в систему')
+        messages.success(self.request, 'Вы залогинены')
         return response
 
 
@@ -111,5 +111,5 @@ class UserLogoutView(LogoutView):
 
     def dispatch(self, request, *args, **kwargs):
         response = super().dispatch(request, *args, **kwargs)
-        messages.success(request, 'Вы вышли из системы')
+        messages.success(request, 'Вы разлогинены')
         return response
