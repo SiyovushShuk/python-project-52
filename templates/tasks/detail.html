@@ -12,10 +12,9 @@
     <div class="card-body">
         <div class="row g-3">
             <div class="col-md-6">
-                <p class="mb-1"><strong>Имя:</strong> {{ task.name }}</p>
                 <p class="mb-1"><strong>Статус:</strong> {{ task.status.name }}</p>
-                <p class="mb-1"><strong>Автор:</strong> {{ task.author.username }}</p>
-                <p class="mb-1"><strong>Исполнитель:</strong> {% if task.executor %}{{ task.executor.username }}{% else %}{% endif %}</p>
+                <p class="mb-1"><strong>Автор:</strong> {{ task.author.get_full_name|default:task.author.username }}</p>
+                <p class="mb-1"><strong>Исполнитель:</strong> {% if task.executor %}{{ task.executor.get_full_name|default:task.executor.username }}{% else %}{% endif %}</p>
                 <p class="mb-1"><strong>Дата создания:</strong> {{ task.created_at|date:"d.m.Y H:i" }}</p>
             </div>
             <div class="col-md-6">
