@@ -36,3 +36,17 @@ jobs:
           uv run coverage run manage.py test users.tests statuses.tests labels.tests tasks.tests -v 2
           uv run coverage report
           uv run coverage xml
+          uv run python make_coverage_badge.py
+
+      - name: Commit and push coverage badge update
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add coverage-badge.json
+          if git diff --cached --quiet; then
+            echo "No coverage badge changes — skip commit"
+          else
+            git commit -m "chore(ci): auto-update coverage badge"
+            git push
+          fi
