@@ -48,10 +48,10 @@
         {% for task in tasks %}
         <tr>
             <td>{{ task.id }}</td>
-            <td>{{ task.name }}</td>
+            <td><a href="{% url 'task_detail' task.pk %}">{{ task.name }}</a></td>
             <td>{{ task.status.name }}</td>
-            <td>{{ task.author.username }}</td>
-            <td>{% if task.executor %}{{ task.executor.username }}{% else %}{% endif %}</td>
+            <td>{{ task.author.get_full_name|default:task.author.username }}</td>
+            <td>{% if task.executor %}{{ task.executor.get_full_name|default:task.executor.username }}{% else %}{% endif %}</td>
             <td>{{ task.created_at|date:"d.m.Y H:i" }}</td>
             <td>
                 <a href="{% url 'task_detail' task.pk %}" class="me-2">Показать</a>
