@@ -56,12 +56,12 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         if self.object.tasks.exists():
-            messages.error(request, 'Невозможно удалить метку')
+            messages.error(request, 'Невозможно удалить метку, потому что она используется')
             return redirect('labels_list')
         try:
             response = super().post(request, *args, **kwargs)
             messages.success(request, 'Метка успешно удалена')
             return response
         except IntegrityError:
-            messages.error(request, 'Невозможно удалить метку')
+            messages.error(request, 'Невозможно удалить метку, потому что она используется')
             return redirect('labels_list')

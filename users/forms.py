@@ -23,14 +23,14 @@ def _apply_bootstrap_classes(form):
 
 
 class UserRegisterForm(UserCreationForm):
-    first_name = CharField(label='Имя', required=False)
-    last_name = CharField(label='Фамилия', required=False)
+    first_name = CharField(label='Имя:', required=False)
+    last_name = CharField(label='Фамилия:', required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'].label = 'Имя пользователя'
-        self.fields['password1'].label = 'Пароль'
-        self.fields['password2'].label = 'Подтверждение пароля'
+        self.fields['username'].label = 'Имя пользователя:'
+        self.fields['password1'].label = 'Пароль:'
+        self.fields['password2'].label = 'Подтверждение пароля:'
         _apply_bootstrap_classes(self)
 
     class Meta:
@@ -45,14 +45,14 @@ class UserRegisterForm(UserCreationForm):
 
 
 class UserUpdateForm(UserCreationForm):
-    first_name = CharField(label='Имя', required=False)
-    last_name = CharField(label='Фамилия', required=False)
+    first_name = CharField(label='Имя:', required=False)
+    last_name = CharField(label='Фамилия:', required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'].label = 'Имя пользователя'
-        self.fields['password1'].label = 'Пароль'
-        self.fields['password2'].label = 'Подтверждение пароля'
+        self.fields['username'].label = 'Имя пользователя:'
+        self.fields['password1'].label = 'Пароль:'
+        self.fields['password2'].label = 'Подтверждение пароля:'
         self.fields['password1'].required = False
         self.fields['password2'].required = False
         _apply_bootstrap_classes(self)
@@ -100,6 +100,6 @@ class UserUpdateForm(UserCreationForm):
 class UserLoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'].label = 'Имя пользователя'
-        self.fields['password'].label = 'Пароль'
+        self.fields['username'].label = 'Имя пользователя:'
+        self.fields['password'].label = 'Пароль:'
         _apply_bootstrap_classes(self)

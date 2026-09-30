@@ -11,7 +11,7 @@ class StatusForm(ModelForm):
         model = Status
         fields = ('name',)
         labels = {
-            'name': 'Имя',
+            'name': 'Имя:',
         }
 
     def __init__(self, *args, **kwargs):

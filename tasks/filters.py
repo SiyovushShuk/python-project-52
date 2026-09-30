@@ -18,21 +18,21 @@ User = get_user_model()
 class TaskFilter(FilterSet):
     status = ModelChoiceFilter(
         queryset=Status.objects.all(),
-        label='Статус',
+        label='Статус:',
     )
     executor = ModelChoiceFilter(
         queryset=User.objects.all(),
-        label='Исполнитель',
+        label='Исполнитель:',
     )
     labels = ModelMultipleChoiceFilter(
         field_name='labels',
         queryset=Label.objects.all(),
-        label='Метки',
+        label='Метка:',
     )
     self_tasks = BooleanFilter(
         field_name='author',
         method='filter_self_tasks',
-        label='Только мои задачи',
+        label='Только свои задачи:',
         widget=forms.CheckboxInput,
     )
 

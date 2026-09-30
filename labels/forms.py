@@ -11,7 +11,7 @@ class LabelForm(ModelForm):
         model = Label
         fields = ('name',)
         labels = {
-            'name': 'Имя',
+            'name': 'Имя:',
         }
 
     def __init__(self, *args, **kwargs):

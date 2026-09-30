@@ -229,7 +229,7 @@ class TaskFilterTestCase(TransactionTestCase):
         self._auth()
         response = self.client.get(reverse('tasks_list'))
         self.assertEqual(response.status_code, 200)
-        for text in ['Статус', 'Исполнитель', 'Метки', 'Только мои задачи', 'Показать', 'Сбросить']:
+        for text in ['Статус:', 'Исполнитель:', 'Метка:', 'Только свои задачи:', 'Показать', 'Сбросить']:
             self.assertContains(response, text)
 
     def test_filter_by_status(self):

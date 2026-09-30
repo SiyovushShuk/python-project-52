@@ -60,5 +60,5 @@ class StatusDeleteView(LoginRequiredMixin, DeleteView):
             messages.success(request, 'Статус успешно удалён')
             return response
         except IntegrityError:
-            messages.error(request, 'Невозможно удалить статус')
+            messages.error(request, 'Невозможно удалить статус, потому что он используется')
             return redirect('statuses_list')
